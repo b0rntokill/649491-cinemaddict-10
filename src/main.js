@@ -219,6 +219,7 @@ const renderTemplate = (container, template, where = `beforeend`) => {
 };
 
 renderTemplate(header, createHeaderProfileTemplate());
+
 renderTemplate(main, createMainNavigateTemplate());
 renderTemplate(main, createMainSortTemplate());
 renderTemplate(main, createMainFilmsTemplate());
