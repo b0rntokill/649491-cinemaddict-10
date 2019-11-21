@@ -265,7 +265,7 @@ renderTemplate(main, createMainFilmsTemplate());
 renderTemplate(main, createFilmDetailsTemplate());
 
 const filmsListDefault = main.querySelector(`.films-list--default .films-list__container`);
-const filmsListExtra = main.querySelectorAll(`.films-list--extra .films-list__container`);
+const filmsListsExtra = main.querySelectorAll(`.films-list--extra .films-list__container`);
 
 repeat(DEFAULT_FILM_COUNT, () => {
   renderTemplate(filmsListDefault, createFilmsCardTemplate());
@@ -273,8 +273,8 @@ repeat(DEFAULT_FILM_COUNT, () => {
 
 renderTemplate(filmsListDefault, createFilmsButtonTemplate());
 
-for (const filmList of Array.from(filmsListExtra)) {
+for (const filmsList of filmsListsExtra) {
   repeat(EXTRA_FILM_COUNT, () => {
-    renderTemplate(filmList, createFilmsCardTemplate());
+    renderTemplate(filmsList, createFilmsCardTemplate());
   });
 }
