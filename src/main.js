@@ -273,8 +273,8 @@ repeat(DEFAULT_FILM_COUNT, () => {
 
 renderTemplate(filmsListDefault, createFilmsButtonTemplate());
 
-Array.from(filmsListExtra).forEach((filmList) => {
+for (const filmList of Array.from(filmsListExtra)) {
   repeat(EXTRA_FILM_COUNT, () => {
     renderTemplate(filmList, createFilmsCardTemplate());
   });
-});
+}
