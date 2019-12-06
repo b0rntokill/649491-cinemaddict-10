@@ -21,5 +21,19 @@ const renderTemplate = (container, template, where = `beforeend`) => {
 const getSortArrayFromLarger = (array, property) => {
   return array.slice().sort((a, b) => b[property] - a[property]);
 };
+// Перемешиванние массива алгоритмом Фишера-Йетса
+const shuffleArray = (array) => {
+  let j;
+  let temp;
+  let newArray = array.slice();
+  for (let i = newArray.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i));
+    temp = newArray[j];
+    newArray[j] = newArray[i];
+    newArray[i] = temp;
+  }
 
-export {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, renderTemplate, getSortArrayFromLarger};
+  return newArray;
+};
+
+export {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, renderTemplate, getSortArrayFromLarger, shuffleArray};

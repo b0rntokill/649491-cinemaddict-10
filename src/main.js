@@ -3,7 +3,7 @@ import {createMainNavigateTemplate} from './components/main/navigation.js';
 import {createMainSortTemplate} from './components/main/sort.js';
 import {createMainFilmsTemplate} from './components/main/films/films.js';
 import {createFilmsCardTemplate} from './components/main/films/card.js';
-// import {createFilmDetailsTemplate} from './components/main/films/details.js';
+import {createFilmDetailsTemplate} from './components/main/films/details.js';
 import {createFilmsButtonTemplate} from './components/main/films/button.js';
 import {createFooterStatisticsTemplate} from './components/footer/statistics.js';
 import {cards} from './mock/mock.js';
@@ -23,7 +23,7 @@ renderTemplate(header, createHeaderProfileTemplate(cards));
 renderTemplate(main, createMainNavigateTemplate(cards));
 renderTemplate(main, createMainSortTemplate());
 renderTemplate(main, createMainFilmsTemplate(cards));
-// renderTemplate(main, createFilmDetailsTemplate(cards[0]));
+renderTemplate(main, createFilmDetailsTemplate(cards[0]));
 
 renderTemplate(footer, createFooterStatisticsTemplate(cards));
 

@@ -1,3 +1,5 @@
+import {shuffleArray} from './../utils.js';
+
 const ARRAY_ELEMENT_FIRST = 0;
 const RELEASE_YEAR_MIN = 1976;
 const RELEASE_YEAR_MAX = 2019;
@@ -11,6 +13,8 @@ const DESCRIPTION_PARAGRAPH_MAX = 3;
 const COUNTRY_MAX = 3;
 const ACTORS_MAX = 4;
 const WRITERS_MAX = 3;
+const DIRECTORS_MAX = 1;
+const COMMENTATORS_NAME = 1;
 const RATING_MAX = 10;
 const POSTER_PATH = `./images/posters/`;
 const EMOJI_PATH = `./images/emoji/`;
@@ -79,7 +83,7 @@ const DESCRIPTIONS_LIST = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const COUNTRYS_LIST = [
+const COUNTRIES_LIST = [
   `USA`,
   `Germany`,
   `Belgium`,
@@ -138,7 +142,7 @@ const getRandomValue = (max, min = 0) => {
 };
 
 const getRandomArrayItem = (array) => {
-  return array[getRandomValue(ARRAY_ELEMENT_FIRST, array.length - 1)];
+  return shuffleArray(array)[ARRAY_ELEMENT_FIRST];
 };
 
 const getRandomRating = () => {
@@ -153,9 +157,8 @@ const getRandomBooleanValue = () => {
   return Math.random() > 0.5;
 };
 
-const getRandomUniqueArray = (array, max = 1, min = 1) => {
-  const randomElements = new Array(getRandomValue(min, max)).fill(``)
-    .map(() => getRandomArrayItem(array));
+const getRandomUniqueArray = (array, max = array.length, min = 0) => {
+  const randomElements = shuffleArray(array).slice(min, max).map(() => getRandomArrayItem(array));
   return [...new Set(randomElements)];
 };
 
@@ -173,7 +176,7 @@ const getRandomPathToPicture = (path, pictures) => {
 
 const getRandomComment = () => {
   return {
-    authorName: getRandomUniqueArray(NAMES_LIST),
+    authorName: getRandomUniqueArray(NAMES_LIST, COMMENTATORS_NAME),
     text: getRandomUniqueArray(DESCRIPTIONS_LIST, DESCRIPTION_PARAGRAPH_MAX).join(` `),
     emoji: getRandomPathToPicture(EMOJI_PATH, EMOJI_LIST),
     date: getRandomDate()
@@ -194,12 +197,12 @@ const getRandomCard = () => {
       totalRating: getRandomRating(),
       poster: getRandomPathToPicture(POSTER_PATH, POSTERS_LIST),
       ageRating: getRandomArrayItem(AGES_RATING),
-      director: getRandomUniqueArray(NAMES_LIST),
+      director: getRandomUniqueArray(NAMES_LIST, DIRECTORS_MAX),
       writers: getRandomUniqueArray(NAMES_LIST, WRITERS_MAX),
       actors: getRandomUniqueArray(NAMES_LIST, ACTORS_MAX),
       release: {
         date: getRandomDate(),
-        releaseCountry: getRandomUniqueArray(COUNTRYS_LIST, COUNTRY_MAX)
+        releaseCountry: getRandomUniqueArray(COUNTRIES_LIST, COUNTRY_MAX)
       },
       runtime: getRandomValue(RUNNING_TIME_MAX, RUNNING_TIME_MIN),
       genre: getRandomUniqueArray(GENRES_LIST, GENRES_MAX),
@@ -208,7 +211,7 @@ const getRandomCard = () => {
     userDetails: {
       personalRating: getRandomRating(),
       watchlist: getRandomBooleanValue(),
-      alredyWatched: getRandomBooleanValue(),
+      alreadyWatched: getRandomBooleanValue(),
       watchingDate: getRandomDate(),
       favorite: getRandomBooleanValue()
     },

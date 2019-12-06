@@ -5,8 +5,8 @@ const EXTRA_FILM_COUNT = 2;
 
 const createFilmTopRatedMarkup = (cards) => {
   let markup = ``;
-  if (cards[0].filmInfo.totalRating !== 0) {
-    const topRatedArray = cards.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+  const topRatedArray = cards.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+  if (topRatedArray[0].filmInfo.totalRating !== 0) {
     const cardsToRender = topRatedArray.slice(0, EXTRA_FILM_COUNT);
     markup = `<section class="films-list films-list--extra">
                 <h2 class="films-list__title">Top rated</h2>
@@ -20,8 +20,8 @@ const createFilmTopRatedMarkup = (cards) => {
 
 const createFilmMostCommentsMarkup = (cards) => {
   let markup = ``;
-  if (cards[0].comments) {
-    const mostCommentArray = cards.slice().sort((a, b) => b.comments.length - a.comments.length);
+  const mostCommentArray = cards.slice().sort((a, b) => b.comments.length - a.comments.length);
+  if (mostCommentArray[0].comments) {
     const cardsToRender = mostCommentArray.slice(0, EXTRA_FILM_COUNT);
     markup = `<section class="films-list films-list--extra">
                 <h2 class="films-list__title">Most commented</h2>

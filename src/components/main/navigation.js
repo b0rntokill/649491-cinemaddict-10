@@ -3,7 +3,7 @@ import {FILTERS_LIST} from './../../const.js';
 const filterCountMap = {
   'all': (cards) => cards.length,
   'watchlist': (cards) => cards.filter((card) => card.userDetails.watchlist).length,
-  'history': (cards) => cards.filter((card) => card.userDetails.alredyWatched).length,
+  'history': (cards) => cards.filter((card) => card.userDetails.alreadyWatched).length,
   'favorites': (cards) => cards.filter((card) => card.userDetails.favorite).length
 };
 
