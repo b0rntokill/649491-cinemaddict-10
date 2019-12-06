@@ -1,5 +1,4 @@
 import {createFilmsCardTemplate} from './card.js';
-// import {getSortArrayFromLarger} from './../../../utils.js';
 
 const EXTRA_FILM_COUNT = 2;
 
@@ -11,7 +10,7 @@ const createFilmTopRatedMarkup = (cards) => {
     markup = `<section class="films-list films-list--extra">
                 <h2 class="films-list__title">Top rated</h2>
                 <div class="films-list__container">
-                ${cardsToRender.map((card) => createFilmsCardTemplate(card)).join(``)}
+                ${cardsToRender.map(createFilmsCardTemplate).join(``)}
                 </div>
               </section>`;
   }
@@ -21,12 +20,12 @@ const createFilmTopRatedMarkup = (cards) => {
 const createFilmMostCommentsMarkup = (cards) => {
   let markup = ``;
   const mostCommentArray = cards.slice().sort((a, b) => b.comments.length - a.comments.length);
-  if (mostCommentArray[0].comments) {
+  if (mostCommentArray[0].comments.length) {
     const cardsToRender = mostCommentArray.slice(0, EXTRA_FILM_COUNT);
     markup = `<section class="films-list films-list--extra">
                 <h2 class="films-list__title">Most commented</h2>
                 <div class="films-list__container">
-                ${cardsToRender.map((card) => createFilmsCardTemplate(card)).join(``)}
+                ${cardsToRender.map(createFilmsCardTemplate).join(``)}
                 </div>
               </section>`;
   }

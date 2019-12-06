@@ -1,6 +1,5 @@
-import {shuffleArray} from './../utils.js';
+import {getRandomValue, getRandomBooleanValue, getRandomArrayItem, getRandomUniqueArray} from './../utils.js';
 
-const ARRAY_ELEMENT_FIRST = 0;
 const RELEASE_YEAR_MIN = 1976;
 const RELEASE_YEAR_MAX = 2019;
 const RELEASE_MONTH_MAX = 11;
@@ -137,29 +136,12 @@ const EMOJI_LIST = [
   `trophy.png`
 ];
 
-const getRandomValue = (max, min = 0) => {
-  return Math.floor(min + Math.random() * (max + 1 - min));
-};
-
-const getRandomArrayItem = (array) => {
-  return shuffleArray(array)[ARRAY_ELEMENT_FIRST];
-};
-
 const getRandomRating = () => {
   let rating = (Math.round(Math.random() * RATING_MAX) + Math.random()).toFixed(1);
   if (rating > RATING_MAX) {
     rating = RATING_MAX.toString();
   }
   return rating;
-};
-
-const getRandomBooleanValue = () => {
-  return Math.random() > 0.5;
-};
-
-const getRandomUniqueArray = (array, max = array.length, min = 0) => {
-  const randomElements = shuffleArray(array).slice(min, max).map(() => getRandomArrayItem(array));
-  return [...new Set(randomElements)];
 };
 
 const getRandomDate = () => {

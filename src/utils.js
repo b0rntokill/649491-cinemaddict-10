@@ -21,19 +21,34 @@ const renderTemplate = (container, template, where = `beforeend`) => {
 const getSortArrayFromLarger = (array, property) => {
   return array.slice().sort((a, b) => b[property] - a[property]);
 };
+
+const getRandomValue = (max, min = 0) => {
+  return Math.floor(min + Math.random() * (max + 1 - min));
+};
+
+const getRandomArrayItem = (array) => {
+  return shuffleArray(array)[0];
+};
+
+const getRandomBooleanValue = () => {
+  return Math.random() > 0.5;
+};
+
+const getRandomUniqueArray = (array, max = array.length, min = 0) => {
+  return shuffleArray(array).slice(min, max);
+};
+
 // Перемешиванние массива алгоритмом Фишера-Йетса
 const shuffleArray = (array) => {
   let j;
-  let temp;
-  let newArray = array.slice();
+  let [...newArray] = array;
   for (let i = newArray.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * (i));
-    temp = newArray[j];
-    newArray[j] = newArray[i];
-    newArray[i] = temp;
+    j = getRandomValue(i);
+    [newArray[j], newArray[i]] = [newArray[i], newArray[j]];
   }
 
   return newArray;
 };
 
-export {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, renderTemplate, getSortArrayFromLarger, shuffleArray};
+
+export {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, renderTemplate, getSortArrayFromLarger, shuffleArray, getRandomValue, getRandomArrayItem, getRandomBooleanValue, getRandomUniqueArray};
