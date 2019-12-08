@@ -30,7 +30,7 @@ const getRandomBooleanValue = () => {
   return Math.random() > 0.5;
 };
 
-const getRandomUniqueArray = (array, max = getRandomValue(array.length), min = 0) => {
+const getRandomUniqueArray = (array, max, min = 0) => {
   return shuffleArray(array).slice(min, max);
 };
 

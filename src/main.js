@@ -6,6 +6,7 @@ import {createFilmsCardTemplate} from './components/main/films/card.js';
 import {createFilmDetailsTemplate} from './components/main/films/details.js';
 import {createFilmsButtonTemplate} from './components/main/films/button.js';
 import {createFooterStatisticsTemplate} from './components/footer/statistics.js';
+import {renderTemplate} from './utils.js';
 import {cards} from './mock/mock.js';
 
 const DEFAULT_FILM_COUNT = 5;
@@ -13,10 +14,6 @@ const DEFAULT_FILM_COUNT = 5;
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
-
-const renderTemplate = (container, template, where = `beforeend`) => {
-  container.insertAdjacentHTML(where, template);
-};
 
 renderTemplate(header, createHeaderProfileTemplate(cards));
 
