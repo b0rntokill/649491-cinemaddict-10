@@ -40,7 +40,7 @@ const showMoreButton = main.querySelector(`.films-list__show-more`);
 
 const onShowMoreButtonClick = (evt) => {
   evt.preventDefault();
-  let currentFilmCount = renderFilmCount;
+  const currentFilmCount = renderFilmCount;
   renderFilmCount += DEFAULT_FILM_COUNT;
   cards.slice(currentFilmCount, renderFilmCount).forEach((card) => renderTemplate(filmsListDefault, createFilmsCardTemplate(card), `beforeend`));
   if (renderFilmCount >= cards.length) {

@@ -17,10 +17,6 @@ const getCommaSeparatedLine = (array) => {
 const renderTemplate = (container, template, where = `beforeend`) => {
   container.insertAdjacentHTML(where, template);
 };
-// Разобраться надо бы
-const getSortArrayFromLarger = (array, property) => {
-  return array.slice().sort((a, b) => b[property] - a[property]);
-};
 
 const getRandomValue = (max, min = 0) => {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -34,14 +30,14 @@ const getRandomBooleanValue = () => {
   return Math.random() > 0.5;
 };
 
-const getRandomUniqueArray = (array, max = array.length, min = 0) => {
+const getRandomUniqueArray = (array, max = getRandomValue(array.length), min = 0) => {
   return shuffleArray(array).slice(min, max);
 };
 
 // Перемешиванние массива алгоритмом Фишера-Йетса
 const shuffleArray = (array) => {
   let j;
-  let [...newArray] = array;
+  const [...newArray] = array;
   for (let i = newArray.length - 1; i > 0; i--) {
     j = getRandomValue(i);
     [newArray[j], newArray[i]] = [newArray[i], newArray[j]];
@@ -51,4 +47,4 @@ const shuffleArray = (array) => {
 };
 
 
-export {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, renderTemplate, getSortArrayFromLarger, shuffleArray, getRandomValue, getRandomArrayItem, getRandomBooleanValue, getRandomUniqueArray};
+export {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, renderTemplate, shuffleArray, getRandomValue, getRandomArrayItem, getRandomBooleanValue, getRandomUniqueArray};

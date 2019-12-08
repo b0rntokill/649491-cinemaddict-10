@@ -10,7 +10,7 @@ const createGenreMarkup = (genres) => {
 
 const createFilmDetailsTemplate = (card) => {
   const {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release, runtime, genre, description} = card.filmInfo;
-  const reliseDate = `${castTimeFormat(release.date.getDate())} ${MONTH_NAMES[release.date.getMonth()]} ${release.date.getFullYear()}`;
+  const releaseDate = `${castTimeFormat(release.date.getDate())} ${MONTH_NAMES[release.date.getMonth()]} ${release.date.getFullYear()}`;
   const time = getRuntimeHours(runtime);
   const genreMarkup = createGenreMarkup(genre);
 
@@ -54,7 +54,7 @@ const createFilmDetailsTemplate = (card) => {
                       </tr>
                       <tr class="film-details__row">
                         <td class="film-details__term">Release Date</td>
-                        <td class="film-details__cell">${reliseDate}</td>
+                        <td class="film-details__cell">${releaseDate}</td>
                       </tr>
                       <tr class="film-details__row">
                         <td class="film-details__term">Runtime</td>
