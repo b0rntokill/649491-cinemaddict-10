@@ -1,4 +1,4 @@
-import {getRuntimeHours} from '../../../utils.js';
+import {getRuntimeHours, createElement} from '../../../utils.js';
 
 const createFilmsCardTemplate = (card) => {
   const {title, totalRating, poster, release, runtime, genre, description} = card.filmInfo;
@@ -28,4 +28,25 @@ const createFilmsCardTemplate = (card) => {
         </article>`;
 };
 
-export {createFilmsCardTemplate};
+export default class FilmsCard {
+  constructor(card) {
+    this._element = null;
+    this._card = card;
+  }
+
+  getTemplate() {
+    return createFilmsCardTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
