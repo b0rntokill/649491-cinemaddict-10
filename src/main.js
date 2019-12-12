@@ -136,5 +136,4 @@ const renderCards = () => {
 };
 
 renderCards();
-
 renderElement(footer, new FooterStatisticsComponent(cards).getElement(), RenderPosition.BEFOREEND);
