@@ -1,4 +1,4 @@
-import {getRuntimeHours} from '../../../utils.js';
+import {getRuntimeHours, createElement} from '../../../utils.js';
 
 const createFilmsCardTemplate = (card) => {
   const {title, totalRating, poster, release, runtime, genre, description} = card.filmInfo;
@@ -6,14 +6,14 @@ const createFilmsCardTemplate = (card) => {
   if (card.comments && card.comments.length !== 0) {
     commentsCount = `${card.comments.length} comments`;
   }
-  const reliseDate = release.date.getFullYear();
+  const releaseDate = release.date.getFullYear();
   const mainGenre = genre[0];
   const time = getRuntimeHours(runtime);
   return `<article class="film-card">
             <h3 class="film-card__title">${title}</h3>
             <p class="film-card__rating">${totalRating}</p>
             <p class="film-card__info">
-              <span class="film-card__year">${reliseDate}</span>
+              <span class="film-card__year">${releaseDate}</span>
               <span class="film-card__duration">${time}</span>
               <span class="film-card__genre">${mainGenre}</span>
             </p>
@@ -28,4 +28,25 @@ const createFilmsCardTemplate = (card) => {
         </article>`;
 };
 
-export {createFilmsCardTemplate};
+export default class FilmsCard {
+  constructor(card) {
+    this._element = null;
+    this._card = card;
+  }
+
+  getTemplate() {
+    return createFilmsCardTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

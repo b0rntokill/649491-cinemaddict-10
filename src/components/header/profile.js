@@ -1,3 +1,5 @@
+import {createElement} from './../../utils.js';
+
 const getUserRank = (cards) => {
   const watched = cards.filter((card) => card.userDetails.alredyWatched).length;
   let rank = `Novice`;
@@ -17,4 +19,25 @@ const createHeaderProfileTemplate = (cards) => {
           </section>`;
 };
 
-export {createHeaderProfileTemplate};
+export default class HeaderProfile {
+  constructor(cards) {
+    this._element = null;
+    this._cards = cards;
+  }
+
+  getTemplate() {
+    return createHeaderProfileTemplate(this._cards);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

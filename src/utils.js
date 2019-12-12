@@ -1,5 +1,28 @@
 const HOUR_IN_MINUTES = 60;
 
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+const renderElement = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
 const castTimeFormat = (value) => {
   return value < 10 ? `0${value}` : String(value);
 };
@@ -12,10 +35,6 @@ const getRuntimeHours = (runtime) => {
 
 const getCommaSeparatedLine = (array) => {
   return array.join(`, `);
-};
-
-const renderTemplate = (container, template, where = `beforeend`) => {
-  container.insertAdjacentHTML(where, template);
 };
 
 const getRandomValue = (max, min = 0) => {
@@ -31,7 +50,7 @@ const getRandomBooleanValue = () => {
 };
 
 const getRandomUniqueArray = (array, max, min = 0) => {
-  return shuffleArray(array).slice(min, max);
+  return shuffleArray(array).slice(min, getRandomValue(max, 1));
 };
 
 // Перемешиванние массива алгоритмом Фишера-Йетса
@@ -47,4 +66,15 @@ const shuffleArray = (array) => {
 };
 
 
-export {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, renderTemplate, shuffleArray, getRandomValue, getRandomArrayItem, getRandomBooleanValue, getRandomUniqueArray};
+export {castTimeFormat,
+  getRuntimeHours,
+  getCommaSeparatedLine,
+  shuffleArray,
+  getRandomValue,
+  getRandomArrayItem,
+  getRandomBooleanValue,
+  getRandomUniqueArray,
+  renderElement,
+  createElement,
+  RenderPosition
+};

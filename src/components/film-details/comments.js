@@ -1,4 +1,4 @@
-import {castTimeFormat} from './../../../utils.js';
+import {castTimeFormat, createElement} from './../../utils.js';
 
 const getDateFormat = (date) => {
   return `${date.getFullYear()}/${castTimeFormat(date.getMonth() + 1)}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
@@ -23,7 +23,7 @@ const createCommentsMarkup = (comments) => {
   }).join(``);
 };
 
-const createFilmCommentsTemplate = (comments) => {
+const createCommentsTemplate = (comments) => {
   const commentsMarkup = createCommentsMarkup(comments);
 
   return `<div class="form-details__bottom-container">
@@ -63,9 +63,28 @@ const createFilmCommentsTemplate = (comments) => {
                 </div>
               </div>
             </section>
-          </div>
-        </form>
-      </section>`;
+          </div>`;
 };
 
-export {createFilmCommentsTemplate};
+export default class Comments {
+  constructor(comments) {
+    this._element = null;
+    this._comments = comments;
+  }
+
+  getTemplate() {
+    return createCommentsTemplate(this._comments);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
