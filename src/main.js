@@ -67,16 +67,17 @@ const renderCard = (cardListElement, detailsListElement, card) => {
   renderElement(cardListElement, filmsCardComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
-const isNoMovies = cards === undefined || cards.length === 0;
-
 renderElement(header, new HeaderProfileComponent(cards).getElement(), RenderPosition.BEFOREEND);
 renderElement(main, new MainNavigateComponent(cards).getElement(), RenderPosition.BEFOREEND);
 renderElement(main, new MainSortComponent().getElement(), RenderPosition.BEFOREEND);
 
 const mainFilmsComponent = new MainFilmsComponent(cards);
 
-const renderCards = (condition) => {
-  if (condition) {
+const renderCards = () => {
+
+  const isNoMovies = cards === undefined || cards.length === 0;
+
+  if (isNoMovies) {
     renderElement(main, mainFilmsComponent.getElement(), RenderPosition.BEFOREEND);
     renderElement(mainFilmsComponent.getElement(), new NoFilmsComponent().getElement(), RenderPosition.BEFOREEND);
   } else {
@@ -134,6 +135,6 @@ const renderCards = (condition) => {
   }
 };
 
-renderCards(isNoMovies);
+renderCards();
 
 renderElement(footer, new FooterStatisticsComponent(cards).getElement(), RenderPosition.BEFOREEND);
