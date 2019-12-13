@@ -1,4 +1,4 @@
-import {createElement} from './../../utils.js';
+import AbstractComponent from './../abstract-component.js';
 import {FILTERS_LIST} from './../../const.js';
 
 const filterCountMap = {
@@ -37,25 +37,13 @@ const createMainNavigateTemplate = (cards) => {
           </nav>`;
 };
 
-export default class MainNavigate {
+export default class MainNavigate extends AbstractComponent {
   constructor(cards) {
-    this._element = null;
+    super();
     this._cards = cards;
   }
 
   getTemplate() {
     return createMainNavigateTemplate(this._cards);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

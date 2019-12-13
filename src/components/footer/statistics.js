@@ -1,4 +1,4 @@
-import {createElement} from './../../utils.js';
+import AbstractComponent from './../abstract-component.js';
 
 const getFilmTotalFormat = (number) => {
   let thousands = Math.trunc((number / 1000));
@@ -13,25 +13,13 @@ const createFooterStatisticsTemplate = (cards) => {
           </section>`;
 };
 
-export default class FooterStatistics {
+export default class FooterStatistics extends AbstractComponent {
   constructor(cards) {
-    this._element = null;
+    super();
     this._cards = cards;
   }
 
   getTemplate() {
     return createFooterStatisticsTemplate(this._cards);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

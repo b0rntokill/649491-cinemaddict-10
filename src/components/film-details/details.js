@@ -1,5 +1,6 @@
 import {MONTH_NAMES} from './../../const.js';
-import {castTimeFormat, getRuntimeHours, getCommaSeparatedLine, createElement} from './../../utils.js';
+import {castTimeFormat, getRuntimeHours, getCommaSeparatedLine} from '../../utils/common.js';
+import AbstractComponent from './../abstract-component.js';
 
 const createGenreMarkup = (genres) => {
   return genres.map((genre) => {
@@ -85,25 +86,13 @@ const createDetailsTemplate = (card) => {
           </div>`;
 };
 
-export default class Details {
+export default class Details extends AbstractComponent {
   constructor(card) {
-    this._element = null;
+    super();
     this._card = card;
   }
 
   getTemplate() {
     return createDetailsTemplate(this._card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
