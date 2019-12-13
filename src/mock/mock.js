@@ -1,4 +1,4 @@
-import {getRandomValue, getRandomBooleanValue, getRandomArrayItem, getRandomUniqueArray} from './../utils.js';
+import {getRandomValue, getRandomBooleanValue, getRandomArrayItem, getRandomUniqueArray} from '../utils/common.js';
 
 const RELEASE_YEAR_MIN = 1976;
 const RELEASE_YEAR_MAX = 2019;

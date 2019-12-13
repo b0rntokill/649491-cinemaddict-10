@@ -1,28 +1,5 @@
 const HOUR_IN_MINUTES = 60;
 
-const RenderPosition = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
-};
-
-const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
-const renderElement = (container, element, place) => {
-  switch (place) {
-    case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
-      break;
-    case RenderPosition.BEFOREEND:
-      container.append(element);
-      break;
-  }
-};
-
 const castTimeFormat = (value) => {
   return value < 10 ? `0${value}` : String(value);
 };
@@ -65,16 +42,13 @@ const shuffleArray = (array) => {
   return newArray;
 };
 
-
-export {castTimeFormat,
+export {
+  castTimeFormat,
   getRuntimeHours,
   getCommaSeparatedLine,
   shuffleArray,
   getRandomValue,
   getRandomArrayItem,
   getRandomBooleanValue,
-  getRandomUniqueArray,
-  renderElement,
-  createElement,
-  RenderPosition
+  getRandomUniqueArray
 };

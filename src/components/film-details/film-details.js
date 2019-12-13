@@ -1,4 +1,4 @@
-import {createElement} from './../../utils.js';
+import AbstractComponent from './../abstract-component.js';
 import Comments from './comments.js';
 import Details from './details.js';
 
@@ -11,9 +11,9 @@ const createFilmDetailsTemplate = (card) => {
           </section>`;
 };
 
-export default class FilmDetailsList {
+export default class FilmDetailsList extends AbstractComponent {
   constructor(card) {
-    this._element = null;
+    super();
     this._card = card;
   }
 
@@ -21,15 +21,8 @@ export default class FilmDetailsList {
     return createFilmDetailsTemplate(this._card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
   }
 }

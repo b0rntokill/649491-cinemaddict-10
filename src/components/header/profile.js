@@ -1,4 +1,4 @@
-import {createElement} from './../../utils.js';
+import AbstractComponent from './../abstract-component.js';
 
 const getUserRank = (cards) => {
   const watched = cards.filter((card) => card.userDetails.alredyWatched).length;
@@ -19,25 +19,13 @@ const createHeaderProfileTemplate = (cards) => {
           </section>`;
 };
 
-export default class HeaderProfile {
+export default class HeaderProfile extends AbstractComponent {
   constructor(cards) {
-    this._element = null;
+    super();
     this._cards = cards;
   }
 
   getTemplate() {
     return createHeaderProfileTemplate(this._cards);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
