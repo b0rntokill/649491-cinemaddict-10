@@ -4,8 +4,7 @@ import DefaultFilmsComponent from './../components/main/films/films-default.js';
 import ExtraFilmsComponent from './../components/main/films/films-extra.js';
 import NoFilmsComponent from './../components/main/films/no-films.js';
 import FilmsButtonComponent from './../components/main/films/button.js';
-import MainSortComponent, {SortType} from './../components/main/sort.js';
-import MainNavigateComponent from './../components/main/navigation.js';
+import MainSortComponent from './../components/main/sort.js';
 import {render, remove, RenderPosition} from './../utils/render.js';
 
 const DEFAULT_FILM_COUNT = 5;
@@ -69,13 +68,10 @@ export default class PageController {
   render(cards) {
     const container = this._container.getElement();
     const body = document.querySelector(`body`);
-    const main = document.querySelector(`main`);
-    render(main, this._mainSortComponent, RenderPosition.AFTERBEGIN);
-    // И снова костыли:
-    render(main, new MainNavigateComponent(cards), RenderPosition.AFTERBEGIN);
-
-    const renderFilmsButton = () => {
-      if (renderFilmCount >= cards.length) {
+    render(container, this._mainSortComponent, RenderPosition.BEFORE);
+    // У меня функция отрисовывающая кнопку, так же принимает массив карт для отрисовки.
+    const renderFilmsButton = (cardsForRender) => {
+      if (renderFilmCount >= cardsForRender.length) {
         return;
       }
 
@@ -83,13 +79,13 @@ export default class PageController {
         evt.preventDefault();
         const currentFilmCount = renderFilmCount;
         renderFilmCount += DEFAULT_FILM_COUNT;
-        renderCards(this._defaultFilmsComponent.getListElement(), body, cards.slice(currentFilmCount, renderFilmCount));
+        renderCards(this._defaultFilmsComponent.getListElement(), body, cardsForRender.slice(currentFilmCount, renderFilmCount));
 
-        if (renderFilmCount >= cards.length) {
+        if (renderFilmCount >= cardsForRender.length) {
           remove(this._filmsButtonComponent);
         }
       };
-
+      // Тут же навешивается слушатель.
       this._filmsButtonComponent.setClickHandler(onFilmsButtonClick);
       render(this._defaultFilmsComponent.getElement(), this._filmsButtonComponent, RenderPosition.BEFOREEND);
     };
@@ -104,7 +100,7 @@ export default class PageController {
     let renderFilmCount = DEFAULT_FILM_COUNT;
     renderCards(this._defaultFilmsComponent.getListElement(), body, cards.slice(0, renderFilmCount));
 
-    renderFilmsButton();
+    renderFilmsButton(cards);
 
     const onSortTypeChangeClick = (sortType) => {
       let sortedCards = [];
@@ -117,15 +113,14 @@ export default class PageController {
 
       sortedCards = sortTypeMap[sortType](cards);
 
-      this._defaultFilmsComponent.getListElement().innerHTML = ``;
+      this._defaultFilmsComponent.clearListElement();
+      renderFilmCount = DEFAULT_FILM_COUNT;
 
-      renderCards(this._defaultFilmsComponent.getListElement(), body, sortedCards);
-
-      if (sortType === SortType.DEFAULT) {
-        renderFilmsButton();
-      } else {
-        remove(this._filmsButtonComponent);
-      }
+      renderCards(this._defaultFilmsComponent.getListElement(), body, sortedCards.slice(0, renderFilmCount));
+      // Поэтому приходится удалять прошлую кнопку, ибо незнаю я как тогда убрать проблему с навешиванием слушателей.
+      // Хотя можно в renderFilmsButton каждый раз создавать новый экзепляр кнопки? Не, все равно ее убирать. Так прокатит. Посоветуй свое решение!
+      remove(this._filmsButtonComponent);
+      renderFilmsButton(sortedCards);
     };
 
     this._mainSortComponent.setSortTypeChangeHandler(onSortTypeChangeClick);
