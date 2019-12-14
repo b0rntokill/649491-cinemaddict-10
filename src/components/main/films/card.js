@@ -40,6 +40,13 @@ export default class FilmsCard extends AbstractComponent {
   }
 
   setClickHandler(handler) {
-    this.getElement().addEventListener(`click`, handler);
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const target = evt.target.className;
+
+      if (target === `film-card__poster` || target === `film-card__title` || target === `film-card__comments`) {
+        handler();
+      }
+    });
   }
 }
