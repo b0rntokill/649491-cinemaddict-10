@@ -69,9 +69,9 @@ export default class PageController {
     const container = this._container.getElement();
     const body = document.querySelector(`body`);
     render(container, this._mainSortComponent, RenderPosition.BEFORE);
-    // У меня функция отрисовывающая кнопку, так же принимает массив карт для отрисовки.
-    const renderFilmsButton = (cardsForRender) => {
-      if (renderFilmCount >= cardsForRender.length) {
+
+    const renderFilmsButton = () => {
+      if (renderFilmCount >= cards.length) {
         return;
       }
 
@@ -79,13 +79,13 @@ export default class PageController {
         evt.preventDefault();
         const currentFilmCount = renderFilmCount;
         renderFilmCount += DEFAULT_FILM_COUNT;
-        renderCards(this._defaultFilmsComponent.getListElement(), body, cardsForRender.slice(currentFilmCount, renderFilmCount));
+        renderCards(this._defaultFilmsComponent.getListElement(), body, cards.slice(currentFilmCount, renderFilmCount));
 
-        if (renderFilmCount >= cardsForRender.length) {
+        if (renderFilmCount >= cards.length) {
           remove(this._filmsButtonComponent);
         }
       };
-      // Тут же навешивается слушатель.
+
       this._filmsButtonComponent.setClickHandler(onFilmsButtonClick);
       render(this._defaultFilmsComponent.getElement(), this._filmsButtonComponent, RenderPosition.BEFOREEND);
     };
@@ -95,35 +95,38 @@ export default class PageController {
     if (isNoMovies) {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
     }
-    render(container, this._defaultFilmsComponent, RenderPosition.BEFOREEND);
 
     let renderFilmCount = DEFAULT_FILM_COUNT;
-    renderCards(this._defaultFilmsComponent.getListElement(), body, cards.slice(0, renderFilmCount));
 
-    renderFilmsButton(cards);
+    const renderDefaultCards = (cardsForRender) => {
+      render(container, this._defaultFilmsComponent, RenderPosition.AFTERBEGIN);
 
-    const onSortTypeChangeClick = (sortType) => {
-      let sortedCards = [];
+      renderCards(this._defaultFilmsComponent.getListElement(), body, cardsForRender.slice(0, renderFilmCount));
 
-      const sortTypeMap = {
-        'default': (array) => array.slice(0, renderFilmCount),
-        'date': (array) => array.slice().sort((a, b) => b.filmInfo.release.date - a.filmInfo.release.date),
-        'rating': (array) => array.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
+      renderFilmsButton();
+
+      const onSortTypeChangeClick = (sortType) => {
+        let sortedCards = [];
+
+        const sortTypeMap = {
+          'default': (array) => array.slice(0, renderFilmCount),
+          'date': (array) => array.slice().sort((a, b) => b.filmInfo.release.date - a.filmInfo.release.date),
+          'rating': (array) => array.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
+        };
+
+        sortedCards = sortTypeMap[sortType](cardsForRender);
+
+        this._defaultFilmsComponent.clearListElement();
+        renderFilmCount = DEFAULT_FILM_COUNT;
+
+        remove(this._filmsButtonComponent);
+        renderDefaultCards(sortedCards);
       };
 
-      sortedCards = sortTypeMap[sortType](cards);
-
-      this._defaultFilmsComponent.clearListElement();
-      renderFilmCount = DEFAULT_FILM_COUNT;
-
-      renderCards(this._defaultFilmsComponent.getListElement(), body, sortedCards.slice(0, renderFilmCount));
-      // Поэтому приходится удалять прошлую кнопку, ибо незнаю я как тогда убрать проблему с навешиванием слушателей.
-      // Хотя можно в renderFilmsButton каждый раз создавать новый экзепляр кнопки? Не, все равно ее убирать. Так прокатит. Посоветуй свое решение!
-      remove(this._filmsButtonComponent);
-      renderFilmsButton(sortedCards);
+      this._mainSortComponent.setSortTypeChangeHandler(onSortTypeChangeClick);
     };
 
-    this._mainSortComponent.setSortTypeChangeHandler(onSortTypeChangeClick);
+    renderDefaultCards(cards);
 
     const renderExtraList = () => {
       const topRatedArray = cards.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
