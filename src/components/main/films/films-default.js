@@ -15,4 +15,8 @@ export default class DefaultFilms extends AbstractComponent {
   getListElement() {
     return this.getElement().querySelector(`.films-list__container`);
   }
+
+  clearListElement() {
+    this.getListElement().innerHTML = ``;
+  }
 }

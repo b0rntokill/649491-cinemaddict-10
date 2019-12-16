@@ -1,6 +1,5 @@
 import HeaderProfileComponent from './components/header/profile.js';
 import MainNavigateComponent from './components/main/navigation.js';
-import MainSortComponent from './components/main/sort.js';
 import MainFilmsComponent from './components/main/films/films-main.js';
 import FooterStatisticsComponent from './components/footer/statistics.js';
 import PageController from './controllers/page-controller.js';
@@ -13,11 +12,8 @@ const footer = document.querySelector(`.footer`);
 
 render(header, new HeaderProfileComponent(cards), RenderPosition.BEFOREEND);
 render(main, new MainNavigateComponent(cards), RenderPosition.BEFOREEND);
-render(main, new MainSortComponent(), RenderPosition.BEFOREEND);
-
 const mainFilmsComponent = new MainFilmsComponent(cards);
 render(main, mainFilmsComponent, RenderPosition.BEFOREEND);
-
 const pageController = new PageController(mainFilmsComponent);
 pageController.render(cards);
 
