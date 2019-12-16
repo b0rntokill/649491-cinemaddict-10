@@ -70,26 +70,6 @@ export default class PageController {
     const body = document.querySelector(`body`);
     render(container, this._mainSortComponent, RenderPosition.BEFORE);
 
-    const renderFilmsButton = () => {
-      if (renderFilmCount >= cards.length) {
-        return;
-      }
-
-      const onFilmsButtonClick = (evt) => {
-        evt.preventDefault();
-        const currentFilmCount = renderFilmCount;
-        renderFilmCount += DEFAULT_FILM_COUNT;
-        renderCards(this._defaultFilmsComponent.getListElement(), body, cards.slice(currentFilmCount, renderFilmCount));
-
-        if (renderFilmCount >= cards.length) {
-          remove(this._filmsButtonComponent);
-        }
-      };
-
-      this._filmsButtonComponent.setClickHandler(onFilmsButtonClick);
-      render(this._defaultFilmsComponent.getElement(), this._filmsButtonComponent, RenderPosition.BEFOREEND);
-    };
-
     const isNoMovies = cards === undefined || cards.length === 0;
 
     if (isNoMovies) {
@@ -100,6 +80,26 @@ export default class PageController {
 
     const renderDefaultCards = (cardsForRender) => {
       render(container, this._defaultFilmsComponent, RenderPosition.AFTERBEGIN);
+
+      const renderFilmsButton = () => {
+        if (renderFilmCount >= cards.length) {
+          return;
+        }
+
+        const onFilmsButtonClick = (evt) => {
+          evt.preventDefault();
+          const currentFilmCount = renderFilmCount;
+          renderFilmCount += DEFAULT_FILM_COUNT;
+          renderCards(this._defaultFilmsComponent.getListElement(), body, cardsForRender.slice(currentFilmCount, renderFilmCount));
+
+          if (renderFilmCount >= cards.length) {
+            remove(this._filmsButtonComponent);
+          }
+        };
+
+        this._filmsButtonComponent.setClickHandler(onFilmsButtonClick);
+        render(this._defaultFilmsComponent.getElement(), this._filmsButtonComponent, RenderPosition.BEFOREEND);
+      };
 
       renderCards(this._defaultFilmsComponent.getListElement(), body, cardsForRender.slice(0, renderFilmCount));
 
