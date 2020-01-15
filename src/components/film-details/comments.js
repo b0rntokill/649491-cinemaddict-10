@@ -1,5 +1,8 @@
 import {castTimeFormat} from '../../utils/common.js';
 import AbstractComponent from './../abstract-component.js';
+import {EMOJIS} from '../../const.js';
+
+const INPUT_CHECKED = `checked`;
 
 const getDateFormat = (date) => {
   return `${date.getFullYear()}/${castTimeFormat(date.getMonth() + 1)}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
@@ -24,7 +27,17 @@ const createCommentsMarkup = (comments) => {
   }).join(``);
 };
 
-const createCommentsTemplate = (comments) => {
+const createEmojiMarkup = (emojis, userEmoji) => {
+  return emojis.map((emoji) => {
+    const isChecked = emoji === userEmoji ? INPUT_CHECKED : ``;
+    return `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value=${emoji} ${isChecked}>
+              <label class="film-details__emoji-label" for="emoji-${emoji}">
+                <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+            </label>`;
+  }).join(``);
+};
+
+const createCommentsTemplate = (comments, emoji) => {
   const commentsMarkup = createCommentsMarkup(comments);
 
   return `<div class="form-details__bottom-container">
@@ -35,45 +48,30 @@ const createCommentsTemplate = (comments) => {
               </ul>
 
               <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label"></div>
-
-                <label class="film-details__comment-label">
-                  <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-                </label>
-
-                <div class="film-details__emoji-list">
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
-                  <label class="film-details__emoji-label" for="emoji-smile">
-                    <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-                  </label>
-
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
-                  <label class="film-details__emoji-label" for="emoji-sleeping">
-                    <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-                  </label>
-
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
-                  <label class="film-details__emoji-label" for="emoji-gpuke">
-                    <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-                  </label>
-
-                  <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
-                  <label class="film-details__emoji-label" for="emoji-angry">
-                    <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-                  </label>
-                </div>
+              <div for="add-emoji" class="film-details__add-emoji-label">
+                ${emoji ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji">` : ``} 
+              </div>
+    
+              <label class="film-details__comment-label">
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+              </label>
+    
+              <div class="film-details__emoji-list">
+                ${createEmojiMarkup(EMOJIS, emoji)}
+              </div>
               </div>
             </section>
           </div>`;
 };
 
 export default class Comments extends AbstractComponent {
-  constructor(comments) {
+  constructor(comments, emoji) {
     super();
     this._comments = comments;
+    this._emoji = emoji;
   }
 
   getTemplate() {
-    return createCommentsTemplate(this._comments);
+    return createCommentsTemplate(this._comments, this._emoji);
   }
 }

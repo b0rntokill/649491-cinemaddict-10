@@ -1,73 +1,56 @@
-import FilmsCardComponent from './../components/main/films/card.js';
-import FilmDetailsComponent from './../components/film-details/film-details.js';
 import DefaultFilmsComponent from './../components/main/films/films-default.js';
 import ExtraFilmsComponent from './../components/main/films/films-extra.js';
 import NoFilmsComponent from './../components/main/films/no-films.js';
 import FilmsButtonComponent from './../components/main/films/button.js';
 import MainSortComponent from './../components/main/sort.js';
+import MovieController from './movie-controller.js';
 import {render, remove, RenderPosition} from './../utils/render.js';
 
 const DEFAULT_FILM_COUNT = 5;
 const EXTRA_FILM_COUNT = 2;
 
-const renderCard = (cardListElement, detailsListElement, card) => {
-  const filmsCardComponent = new FilmsCardComponent(card);
-
-  const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      evt.preventDefault();
-      replaceDetailsToCard();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  const onCardClick = () => {
-    replaceCardToDetails();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  };
-
-  filmsCardComponent.setClickHandler(onCardClick);
-
-  const filmDetailsComponent = new FilmDetailsComponent(card);
-
-  const onCloseButtonClick = (evt) => {
-    evt.preventDefault();
-    replaceDetailsToCard();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  };
-
-  filmDetailsComponent.setCloseClickHandler(onCloseButtonClick);
-
-  const replaceCardToDetails = () => {
-    return render(detailsListElement, filmDetailsComponent, RenderPosition.BEFOREEND);
-  };
-
-  const replaceDetailsToCard = () => {
-    return filmDetailsComponent.getElement().remove();
-  };
-
-  render(cardListElement, filmsCardComponent, RenderPosition.BEFOREEND);
+const EXTRA_LIST_TITLE = {
+  RATED: `Top rated`,
+  COMMENT: `Most comment`
 };
 
-const renderCards = (cardsListElement, detailsListElement, cards) => {
-  cards.forEach((card) => renderCard(cardsListElement, detailsListElement, card));
+const renderCards = (cardsListElement, detailsListElement, cards, onDataChange) => {
+  return cards.map((card) => {
+    const movieController = new MovieController(cardsListElement, detailsListElement, onDataChange);
+    movieController.render(card);
+    return movieController;
+  });
 };
 
 export default class PageController {
   constructor(container) {
     this._container = container;
+    this._body = document.querySelector(`body`);
 
+    this._cards = [];
+    // Коллекция отрисованных контроллеров карточек
+    this._showedMovieControllers = [];
+    this._showedExtraFilmsContainers = [];
+    this._renderFilmCount = DEFAULT_FILM_COUNT;
+
+    this._onDataChange = this._onDataChange.bind(this);
+
+    this._extraFilmsContainer = null;
     this._noFilmsComponent = new NoFilmsComponent();
     this._defaultFilmsComponent = new DefaultFilmsComponent();
     this._filmsButtonComponent = new FilmsButtonComponent();
     this._mainSortComponent = new MainSortComponent();
+
+    // Этот метод жестко забинден по причине наличия в нем обращения к приватному свойству this._cards контроллера.
+    // Если этого не сделать то this будет window, а у него нет свойства this._cards.
+    this._onSortTypeChangeClick = this._onSortTypeChangeClick.bind(this);
+    this._mainSortComponent.setSortTypeChangeHandler(this._onSortTypeChangeClick);
   }
 
   render(cards) {
+    this._cards = cards;
     const container = this._container.getElement();
-    const body = document.querySelector(`body`);
+
     render(container, this._mainSortComponent, RenderPosition.BEFORE);
 
     const isNoMovies = cards === undefined || cards.length === 0;
@@ -76,84 +59,95 @@ export default class PageController {
       render(container, this._noFilmsComponent, RenderPosition.BEFOREEND);
     }
 
-    let renderFilmCount = DEFAULT_FILM_COUNT;
+    this._renderDefaultCards(this._cards);
+    this._renderExtraList();
+  }
 
-    const renderDefaultCards = (cardsForRender) => {
-      render(container, this._defaultFilmsComponent, RenderPosition.AFTERBEGIN);
+  _renderDefaultCards(cardsForRender) {
+    render(this._container.getElement(), this._defaultFilmsComponent, RenderPosition.AFTERBEGIN);
 
-      const renderFilmsButton = () => {
-        if (renderFilmCount >= cards.length) {
-          return;
-        }
+    const newCards = renderCards(this._defaultFilmsComponent.getListElement(), this._body, cardsForRender.slice(0, this._renderFilmCount), this._onDataChange);
+    this._showedMovieControllers = this._showedMovieControllers.concat(newCards);
 
-        const onFilmsButtonClick = (evt) => {
-          evt.preventDefault();
-          const currentFilmCount = renderFilmCount;
-          renderFilmCount += DEFAULT_FILM_COUNT;
-          renderCards(this._defaultFilmsComponent.getListElement(), body, cardsForRender.slice(currentFilmCount, renderFilmCount));
+    this._renderFilmsButton(cardsForRender);
+  }
 
-          if (renderFilmCount >= cards.length) {
-            remove(this._filmsButtonComponent);
-          }
-        };
+  _renderExtraList() {
+    if (this._showedExtraFilmsContainers) {
+      this._showedExtraFilmsContainers.map((it) => {
+        remove(it);
+      });
+    }
 
-        this._filmsButtonComponent.setClickHandler(onFilmsButtonClick);
-        render(this._defaultFilmsComponent.getElement(), this._filmsButtonComponent, RenderPosition.BEFOREEND);
-      };
+    const topRatedArray = this._cards.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+    const mostCommentArray = this._cards.slice().sort((a, b) => b.comments.length - a.comments.length);
 
-      renderCards(this._defaultFilmsComponent.getListElement(), body, cardsForRender.slice(0, renderFilmCount));
+    if (topRatedArray[0].filmInfo.totalRating !== 0) {
+      this._renderExtraCards(topRatedArray, EXTRA_LIST_TITLE.RATED);
+    }
 
-      renderFilmsButton();
+    if (mostCommentArray[0].comments.length) {
+      this._renderExtraCards(mostCommentArray, EXTRA_LIST_TITLE.COMMENT);
+    }
+  }
 
-      const onSortTypeChangeClick = (sortType) => {
-        let sortedCards = [];
+  _renderExtraCards(sortedCards, title) {
+    this._extraFilmsContainer = new ExtraFilmsComponent();
+    // Записываем массив отрисованных экстра карточек фильмов, для перерендеривания при нажатии кнопок в дефолтном списке карточек
+    this._showedExtraFilmsContainers = this._showedExtraFilmsContainers.concat(this._extraFilmsContainer);
+    this._extraFilmsContainer.setTitle(title);
+    renderCards(this._extraFilmsContainer.getListElement(), this._body, sortedCards.slice(0, EXTRA_FILM_COUNT), this._onDataChange);
+    render(this._container.getElement(), this._extraFilmsContainer, RenderPosition.BEFOREEND);
+  }
 
-        const sortTypeMap = {
-          'default': (array) => array.slice(0, renderFilmCount),
-          'date': (array) => array.slice().sort((a, b) => b.filmInfo.release.date - a.filmInfo.release.date),
-          'rating': (array) => array.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
-        };
+  _renderFilmsButton(cardsForRender) {
+    if (this._renderFilmCount >= cardsForRender.length) {
+      return;
+    }
 
-        sortedCards = sortTypeMap[sortType](cardsForRender);
+    const onFilmsButtonClick = (evt) => {
+      evt.preventDefault();
+      const currentFilmCount = this._renderFilmCount;
+      this._renderFilmCount += DEFAULT_FILM_COUNT;
+      renderCards(this._defaultFilmsComponent.getListElement(), this._body, cardsForRender.slice(currentFilmCount, this._renderFilmCount));
 
-        this._defaultFilmsComponent.clearListElement();
-        renderFilmCount = DEFAULT_FILM_COUNT;
-
+      if (this._renderFilmCount >= cardsForRender.length) {
         remove(this._filmsButtonComponent);
-        renderDefaultCards(sortedCards);
-      };
-
-      this._mainSortComponent.setSortTypeChangeHandler(onSortTypeChangeClick);
-    };
-
-    renderDefaultCards(cards);
-
-    const renderExtraList = () => {
-      const topRatedArray = cards.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
-      const mostCommentArray = cards.slice().sort((a, b) => b.comments.length - a.comments.length);
-
-      const extraListsTitle = {
-        rated: `Top rated`,
-        comment: `Most comment`
-      };
-
-      const renderExtraCards = (sortedCards, title) => {
-        const extrafilmContainer = new ExtraFilmsComponent();
-        extrafilmContainer.setTitle(title);
-        sortedCards.slice(0, EXTRA_FILM_COUNT).forEach((card) => renderCard(extrafilmContainer.getListElement(), body, card));
-        render(container, extrafilmContainer, RenderPosition.BEFOREEND);
-      };
-
-      if (topRatedArray[0].filmInfo.totalRating !== 0) {
-        renderExtraCards(topRatedArray, extraListsTitle.rated);
-      }
-
-      if (mostCommentArray[0].comments.length) {
-        renderExtraCards(mostCommentArray, extraListsTitle.comment);
       }
     };
 
-    renderExtraList();
+    this._filmsButtonComponent.setClickHandler(onFilmsButtonClick);
+    render(this._defaultFilmsComponent.getElement(), this._filmsButtonComponent, RenderPosition.BEFOREEND);
+  }
 
+  _onSortTypeChangeClick(sortType) {
+    let sortedCards = [];
+
+    const sortTypeMap = {
+      'default': (array) => array,
+      'date': (array) => array.slice().sort((a, b) => b.filmInfo.release.date - a.filmInfo.release.date),
+      'rating': (array) => array.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating)
+    };
+
+    sortedCards = sortTypeMap[sortType](this._cards);
+
+    this._defaultFilmsComponent.clearListElement();
+    this._renderFilmCount = DEFAULT_FILM_COUNT;
+    this._showedMovieControllers = [];
+    remove(this._filmsButtonComponent);
+    this._renderDefaultCards(sortedCards);
+  }
+
+  _onDataChange(movieController, oldData, newData) {
+    const index = this._cards.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._cards = [].concat(this._cards.slice(0, index), newData, this._cards.slice(index + 1));
+
+    movieController.render(this._cards[index]);
+    this._renderExtraList();
   }
 }
