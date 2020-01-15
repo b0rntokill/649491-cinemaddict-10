@@ -20,4 +20,8 @@ const MONTH_NAMES = [
   `December`,
 ];
 
-export {FILTERS_LIST, MONTH_NAMES};
+const EMOJIS = [`angry`, `puke`, `sleeping`, `smile`, `trophy`];
+
+const USER_SCORES = [`1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`];
+
+export {FILTERS_LIST, MONTH_NAMES, EMOJIS, USER_SCORES};

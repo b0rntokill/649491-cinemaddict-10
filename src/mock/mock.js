@@ -14,7 +14,7 @@ const ACTORS_MAX = 4;
 const WRITERS_MAX = 3;
 const DIRECTORS_MAX = 1;
 const COMMENTATORS_NAME = 1;
-const RATING_MAX = 10;
+const RATING_MAX = 9;
 const POSTER_PATH = `./images/posters/`;
 const EMOJI_PATH = `./images/emoji/`;
 
@@ -137,6 +137,7 @@ const getRandomRating = () => {
   if (rating > RATING_MAX) {
     rating = RATING_MAX.toString();
   }
+
   return rating;
 };
 
@@ -187,7 +188,7 @@ const getRandomCard = () => {
       description: getRandomUniqueArray(DESCRIPTIONS_LIST, DESCRIPTION_PARAGRAPH_MAX).join(` `),
     },
     userDetails: {
-      personalRating: getRandomRating(),
+      personalRating: Math.round(getRandomRating()),
       watchlist: getRandomBooleanValue(),
       alreadyWatched: getRandomBooleanValue(),
       watchingDate: getRandomDate(),
