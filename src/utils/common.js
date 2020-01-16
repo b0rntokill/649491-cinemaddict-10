@@ -1,13 +1,15 @@
-const HOUR_IN_MINUTES = 60;
+import moment from 'moment';
 
-const castTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
+const commentsTimeFormat = (date) => {
+  return moment(date).format(`MM/D/YYYY h:mm`);
+};
+
+const releaseTimeFormat = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
 };
 
 const getRuntimeHours = (runtime) => {
-  const hours = `${Math.trunc(runtime / 60)}h`;
-  const minutes = `${runtime % HOUR_IN_MINUTES}m`;
-  return `${hours} ${minutes}`;
+  return moment(runtime).format(`hh mm`);
 };
 
 const getCommaSeparatedLine = (array) => {
@@ -43,7 +45,8 @@ const shuffleArray = (array) => {
 };
 
 export {
-  castTimeFormat,
+  commentsTimeFormat,
+  releaseTimeFormat,
   getRuntimeHours,
   getCommaSeparatedLine,
   shuffleArray,

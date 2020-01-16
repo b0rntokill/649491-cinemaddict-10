@@ -1,12 +1,8 @@
-import {castTimeFormat} from '../../utils/common.js';
+import {commentsTimeFormat} from '../../utils/common.js';
 import AbstractComponent from './../abstract-component.js';
 import {EMOJIS} from '../../const.js';
 
 const INPUT_CHECKED = `checked`;
-
-const getDateFormat = (date) => {
-  return `${date.getFullYear()}/${castTimeFormat(date.getMonth() + 1)}/${date.getDate()} ${castTimeFormat(date.getHours())}:${castTimeFormat(date.getMinutes())}`;
-};
 
 const createCommentsMarkup = (comments) => {
   return comments.map((comment) => {
@@ -19,7 +15,7 @@ const createCommentsMarkup = (comments) => {
                 <p class="film-details__comment-text">${text}</p>
                 <p class="film-details__comment-info">
                   <span class="film-details__comment-author">${authorName}</span>
-                  <span class="film-details__comment-day">${getDateFormat(date)}</span>
+                  <span class="film-details__comment-day">${commentsTimeFormat(date)}</span>
                   <button class="film-details__comment-delete">Delete</button>
                 </p>
               </div>

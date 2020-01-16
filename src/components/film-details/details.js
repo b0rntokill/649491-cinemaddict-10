@@ -1,5 +1,4 @@
-import {MONTH_NAMES} from './../../const.js';
-import {castTimeFormat, getRuntimeHours, getCommaSeparatedLine} from '../../utils/common.js';
+import {releaseTimeFormat, getRuntimeHours, getCommaSeparatedLine} from '../../utils/common.js';
 import AbstractComponent from './../abstract-component.js';
 
 const INPUT_CHECKED = `checked`;
@@ -13,10 +12,10 @@ const createGenreMarkup = (genres) => {
 const createDetailsTemplate = (card, options) => {
   const {isWatchlist, isFavorite, isWatched, userRating} = options;
   const {title, alternativeTitle, totalRating, poster, ageRating, director, writers, actors, release, runtime, genre, description} = card.filmInfo;
-  const releaseDate = `${castTimeFormat(release.date.getDate())} ${MONTH_NAMES[release.date.getMonth()]} ${release.date.getFullYear()}`;
+  const releaseDate = releaseTimeFormat(release.date);
   const time = getRuntimeHours(runtime);
   const checkInput = (condition) => condition ? INPUT_CHECKED : ``;
-  const checkEndingWord = (array) => array.length >= 1 ? `s` : ``;
+  const checkEndingWord = (array) => array.length > 1 ? `s` : ``;
 
   return `<div class="form-details__top-container">
             <div class="film-details__close">

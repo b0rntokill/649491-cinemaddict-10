@@ -5,8 +5,9 @@ const RELEASE_YEAR_MAX = 2019;
 const RELEASE_MONTH_MAX = 11;
 const RELEASE_DAY_MAX = 30;
 const ID_MAX = 100500;
-const RUNNING_TIME_MIN = 78;
-const RUNNING_TIME_MAX = 148;
+const RUNNING_TIME_HOURS_MAX = 3;
+const RUNNING_TIME_HOURS_MIN = 1;
+const RUNNING_TIME_MINUTES_MAX = 60;
 const GENRES_MAX = 5;
 const DESCRIPTION_PARAGRAPH_MAX = 3;
 const COUNTRY_MAX = 3;
@@ -148,6 +149,10 @@ const getRandomDate = () => {
       getRandomValue(RELEASE_DAY_MAX));
 };
 
+const getRandomRuntime = () => {
+  return new Date(0, 0, 0, getRandomValue(RUNNING_TIME_HOURS_MAX, RUNNING_TIME_HOURS_MIN), getRandomValue(RUNNING_TIME_MINUTES_MAX));
+};
+
 const getRandomPathToPicture = (path, pictures) => {
   const poster = getRandomArrayItem(pictures);
   return `${path}${poster}`;
@@ -183,7 +188,7 @@ const getRandomCard = () => {
         date: getRandomDate(),
         releaseCountry: getRandomUniqueArray(COUNTRIES_LIST, COUNTRY_MAX)
       },
-      runtime: getRandomValue(RUNNING_TIME_MAX, RUNNING_TIME_MIN),
+      runtime: getRandomRuntime(),
       genre: getRandomUniqueArray(GENRES_LIST, GENRES_MAX),
       description: getRandomUniqueArray(DESCRIPTIONS_LIST, DESCRIPTION_PARAGRAPH_MAX).join(` `),
     },
