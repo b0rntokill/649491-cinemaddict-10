@@ -9,7 +9,7 @@ const releaseTimeFormat = (date) => {
 };
 
 const getRuntimeHours = (runtime) => {
-  return moment(runtime).format(`hh mm`);
+  return moment(runtime).format(`hh[h] mm[m]`);
 };
 
 const getCommaSeparatedLine = (array) => {
